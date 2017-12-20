@@ -1,0 +1,54 @@
+<template>
+
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+
+    <p>Hello World</p>
+
+</template>
+<script>
+
+    window.customElements.define('app-custom', class extends HTMLElement {
+
+        constructor() {
+            super();
+
+            let template = document.currentScript.ownerDocument.querySelector('template');
+            let shadowRoot = this.attachShadow({mode: 'open'});
+            shadowRoot.appendChild(template.content.cloneNode(true));
+
+            this._countryCode = null;
+        }
+
+        static get observedAttributes() { return ["country"]; }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+            this._countryCode = newValue;
+            console.log(this._countryCode);
+            this._updateRendering();
+        }
+
+        connectedCallback() {
+            this._updateRendering();
+        }
+
+        get country() {
+            return this._countryCode;
+        }
+        set country(v) {
+            this.setAttribute("country", v);
+        }
+
+        _updateRendering() {
+            // Left as an exercise for the reader. But, you'll probably want to
+            // check this.ownerDocument.defaultView to see if we've been
+            // inserted into a document with a browsing context, and avoid
+            // doing any work if not.
+        }
+
+    });
+
+</script>
